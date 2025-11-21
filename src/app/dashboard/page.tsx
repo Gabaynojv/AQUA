@@ -127,6 +127,16 @@ export default function DashboardPage() {
 
     const { data: orders, isLoading } = useCollection<Order>(ordersQuery);
 
+    // Check for recent status updates (within last 24 hours)
+    const recentUpdates = useMemo(() => {
+        if (!orders) return [];
+        const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+        return orders.filter(order => {
+            const orderDate = new Date(order.orderDate).getTime();
+            return orderDate > oneDayAgo && (order.status === 'Out for Delivery' || order.status === 'Delivered');
+        });
+    }, [orders]);
+
     const stats = useMemo(() => {
         if (!orders) return { totalOrders: 0, totalSpent: 0, lastOrderDate: 'N/A' };
         const totalSpent = orders.reduce((acc, order) => acc + order.totalAmount, 0);
@@ -153,6 +163,40 @@ export default function DashboardPage() {
                 <StatCard title="Total Spent" value={`₱${stats.totalSpent.toFixed(2)}`} icon={<Receipt className="h-4 w-4 text-muted-foreground" />} isLoading={isLoading} />
                 <StatCard title="Last Order" value={stats.lastOrderDate} icon={<CreditCard className="h-4 w-4 text-muted-foreground" />} isLoading={isLoading} />
             </div>
+
+            {recentUpdates.length > 0 && (
+                <Card className="border-2 border-green-500/30 shadow-xl bg-gradient-to-br from-green-50 to-cyan-50 dark:from-green-950/20 dark:to-cyan-950/20">
+                    <CardHeader>
+                        <div className="flex items-center gap-2">
+                            <div className="h-10 w-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                                <Package className="h-5 w-5 text-green-600" />
+                            </div>
+                            <div>
+                                <CardTitle className="text-xl text-green-700 dark:text-green-400">Recent Updates</CardTitle>
+                                <CardDescription>You have {recentUpdates.length} order update{recentUpdates.length > 1 ? 's' : ''} in the last 24 hours</CardDescription>
+                            </div>
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-2">
+                            {recentUpdates.map(order => (
+                                <div key={order.id} className="flex items-center justify-between p-3 bg-white/50 dark:bg-gray-900/50 rounded-lg">
+                                    <div className="flex items-center gap-3">
+                                        <div className={`h-2 w-2 rounded-full ${order.status === 'Delivered' ? 'bg-green-500' : 'bg-yellow-500'} animate-pulse`} />
+                                        <div>
+                                            <p className="font-semibold text-sm">Order #{order.id.substring(0, 7)}</p>
+                                            <p className="text-xs text-muted-foreground">{order.status}</p>
+                                        </div>
+                                    </div>
+                                    <Button variant="outline" size="sm" onClick={() => setSelectedOrder(order)}>
+                                        View
+                                    </Button>
+                                </div>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
 
             <div className="grid gap-6">
                 <Card className="border-2 shadow-xl">

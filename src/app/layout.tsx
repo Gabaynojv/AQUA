@@ -3,6 +3,7 @@ import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase';
 import { CartProvider } from '@/context/cart-context';
+import { OrderNotifications } from '@/components/order-notifications';
 
 export const metadata: Metadata = {
   title: 'AquaFlow',
@@ -27,6 +28,7 @@ export default function RootLayout({
       <body className="font-body antialiased min-h-screen flex flex-col">
         <FirebaseClientProvider>
           <CartProvider>
+            <OrderNotifications />
             {children}
           </CartProvider>
         </FirebaseClientProvider>

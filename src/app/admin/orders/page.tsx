@@ -144,6 +144,16 @@ export default function AdminOrdersPage() {
     try {
       const orderRef = doc(firestore, `users/${order.userId}/orders/${order.id}`);
       await updateDoc(orderRef, { status });
+      
+      // Show success message
+      const statusMessages = {
+        'Processing': 'Order approved and is now being processed',
+        'Out for Delivery': 'Order marked as shipped - customer will be notified',
+        'Delivered': 'Order marked as delivered - customer will be notified',
+        'Cancelled': 'Order cancelled'
+      };
+      
+      alert(`✓ ${statusMessages[status]}`);
     } catch (err) {
       console.error('Failed to update status', err);
       alert('Failed to update status. See console for details.');
