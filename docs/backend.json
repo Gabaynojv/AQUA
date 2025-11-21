@@ -1,0 +1,410 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the AquaFlow system.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the User entity."
+        },
+        "firstName": {
+          "type": "string",
+          "description": "User's first name."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "User's last name."
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address.",
+          "format": "email"
+        },
+        "phone": {
+          "type": "string",
+          "description": "User's phone number."
+        },
+        "addressId": {
+          "type": "string",
+          "description": "Reference to Address. (Relationship: User 1:1 Address)"
+        },
+        "dateJoined": {
+          "type": "string",
+          "description": "The date and time when the user joined the system.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "firstName",
+        "lastName",
+        "email",
+        "dateJoined"
+      ]
+    },
+    "Address": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Address",
+      "type": "object",
+      "description": "Represents a user's address.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Address entity."
+        },
+        "street": {
+          "type": "string",
+          "description": "Street address."
+        },
+        "city": {
+          "type": "string",
+          "description": "City."
+        },
+        "state": {
+          "type": "string",
+          "description": "State."
+        },
+        "zipCode": {
+          "type": "string",
+          "description": "Zip code."
+        },
+        "country": {
+          "type": "string",
+          "description": "Country."
+        }
+      },
+      "required": [
+        "id",
+        "street",
+        "city",
+        "state",
+        "zipCode",
+        "country"
+      ]
+    },
+    "Product": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Product",
+      "type": "object",
+      "description": "Represents a water product available for purchase.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Product entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the product."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the product."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the product image.",
+          "format": "uri"
+        },
+        "size": {
+          "type": "string",
+          "description": "Size of the water product (e.g., 500ml, 1 liter)."
+        },
+        "brand": {
+          "type": "string",
+          "description": "Brand of the water product."
+        },
+        "price": {
+          "type": "number",
+          "description": "Price of the product."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "imageUrl",
+        "size",
+        "brand",
+        "price"
+      ]
+    },
+    "Order": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Order",
+      "type": "object",
+      "description": "Represents an order placed by a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Order entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N Order)"
+        },
+        "orderDate": {
+          "type": "string",
+          "description": "Date when the order was placed.",
+          "format": "date-time"
+        },
+        "deliveryDate": {
+          "type": "string",
+          "description": "Date when the order is scheduled for delivery.",
+          "format": "date-time"
+        },
+        "deliverySlot": {
+          "type": "string",
+          "description": "Time slot for the delivery (e.g., 9am-12pm)."
+        },
+        "totalAmount": {
+          "type": "number",
+          "description": "Total amount for the order."
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the order (e.g., pending, processing, delivered)."
+        },
+        "deliveryAddressId": {
+          "type": "string",
+          "description": "Reference to Address. (Relationship: Order 1:1 Address)"
+        },
+        "deliveryMethod": {
+          "type": "string",
+          "description": "The chosen method for receiving the order.",
+          "enum": ["Deliver", "Walk-in"]
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "The chosen method for payment.",
+          "enum": ["Cash on Delivery", "GCash", "Maya"]
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "orderDate",
+        "deliveryDate",
+        "deliverySlot",
+        "totalAmount",
+        "status",
+        "deliveryAddressId",
+        "deliveryMethod",
+        "paymentMethod"
+      ]
+    },
+    "OrderItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "OrderItem",
+      "type": "object",
+      "description": "Represents an item within an order.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the OrderItem entity."
+        },
+        "orderId": {
+          "type": "string",
+          "description": "Reference to Order. (Relationship: Order 1:N OrderItem)"
+        },
+        "productId": {
+          "type": "string",
+          "description": "Reference to Product. (Relationship: Product 1:N OrderItem)"
+        },
+        "quantity": {
+          "type": "number",
+          "description": "Quantity of the product in the order."
+        },
+        "unitPrice": {
+          "type": "number",
+          "description": "Price of one unit of the product."
+        }
+      },
+      "required": [
+        "id",
+        "orderId",
+        "productId",
+        "quantity",
+        "unitPrice"
+      ]
+    },
+    "DeliveryRoute": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "DeliveryRoute",
+      "type": "object",
+      "description": "Represents a delivery route optimized for a set of orders.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the DeliveryRoute entity."
+        },
+        "routeDate": {
+          "type": "string",
+          "description": "Date for which the route is planned.",
+          "format": "date-time"
+        },
+        "orderIds": {
+          "type": "array",
+          "description": "References to Orders. (Relationship: DeliveryRoute 1:N Order)",
+          "items": {
+            "type": "string"
+          }
+        },
+        "optimizedRoute": {
+          "type": "string",
+          "description": "Serialized representation of the optimized route (e.g., GeoJSON)."
+        }
+      },
+      "required": [
+        "id",
+        "routeDate",
+        "orderIds",
+        "optimizedRoute"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous",
+      "google.com"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profiles. Uses path-based ownership for user data.  The 'userId' parameter is used for authorization rules to ensure users can only access their own profile data.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/addresses/{addressId}",
+        "definition": {
+          "entityName": "Address",
+          "schema": {
+            "$ref": "#/backend/entities/Address"
+          },
+          "description": "Stores user addresses. Uses path-based ownership for user data. The 'userId' and 'addressId' parameters are used for authorization rules to ensure users can only access their own addresses.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            },
+            {
+              "name": "addressId",
+              "description": "The unique identifier of the address."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/products/{productId}",
+        "definition": {
+          "entityName": "Product",
+          "schema": {
+            "$ref": "#/backend/entities/Product"
+          },
+          "description": "Stores product information. Publicly accessible.",
+          "params": [
+            {
+              "name": "productId",
+              "description": "The unique identifier of the product."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/orders/{orderId}",
+        "definition": {
+          "entityName": "Order",
+          "schema": {
+            "$ref": "#/backend/entities/Order"
+          },
+          "description": "Stores order information. Uses path-based ownership. Includes 'userId' to authorize order access.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            },
+            {
+              "name": "orderId",
+              "description": "The unique identifier of the order."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/orders/{orderId}/orderItems/{orderItemId}",
+        "definition": {
+          "entityName": "OrderItem",
+          "schema": {
+            "$ref": "#/backend/entities/OrderItem"
+          },
+          "description": "Stores order item information. Nested under orders for data locality and simplified querying. Path based ownership is maintained from the parent.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            },
+            {
+              "name": "orderId",
+              "description": "The unique identifier of the order."
+            },
+            {
+              "name": "orderItemId",
+              "description": "The unique identifier of the order item."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/deliveryRoutes/{deliveryRouteId}",
+        "definition": {
+          "entityName": "DeliveryRoute",
+          "schema": {
+            "$ref": "#/backend/entities/DeliveryRoute"
+          },
+          "description": "Stores delivery route information. Accessible by admins.",
+          "params": [
+            {
+              "name": "deliveryRouteId",
+              "description": "The unique identifier of the delivery route."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/roles_admin/{userId}",
+        "definition": {
+          "entityName": "adminRole",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Collection used for admin role assignment. Existence of document implies admin role.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to support AquaFlow's core features, including product catalog management, order placement, delivery scheduling, user authentication, and admin dashboard functionalities. The structure emphasizes Authorization Independence, DBAC, and QAPs to ensure a secure, scalable, and debuggable system.\n\n*   **Authorization Independence:** Achieved through denormalization of user roles and memberships directly within documents that require authorization checks, eliminating the need for costly and complex `get()` calls in security rules. For instance, the `orders` collection will contain a `userId` field. Although this is not strictly a 'membership map' it is sufficient for path based ownership authorization. This ensures atomic operations (transactions/batches) are not broken due to hierarchical authorization dependencies.\n*   **DBAC (Database-Based Access Control):** User roles (e.g., admin) are stored in the database. Authorization relies solely on `request.auth.uid`. No custom claims are used.\n*   **QAPs (Rules are not Filters):** The structure supports secure `list` operations by segregating data based on access needs and using path-based ownership. For example, user-specific data (orders, addresses) are stored under `/users/{userId}`, making it easy to define rules that allow users to only access their own data. The `products` collection, intended to be publicly viewable, is placed directly at the root collection level, allowing for a simple rule enabling read access to all.\n\nPath-based ownership is used extensively for user-owned data (e.g., `/users/{userId}/orders/{orderId}`). Collaborative data is not explicitly present in the current entities, but the structure can be extended using membership maps if collaborative features are introduced in the future. Explicit state modeling is promoted through the `Order.status` field, enhancing clarity and predictability.\n\nThe structure avoids dynamic keys and enforces naming conventions for authorization fields (`userId`, `orderId`, `addressId`)."
+  }
+}
+    
+    
